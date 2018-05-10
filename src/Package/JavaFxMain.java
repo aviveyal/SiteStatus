@@ -1,6 +1,7 @@
 package Package;
 	
 import javafx.application.Application;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -13,7 +14,9 @@ public class JavaFxMain extends Application {
 		try {
 			
 			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
-			Scene scene = new Scene(root,800,600);
+			int width = (int) Screen.getPrimary().getBounds().getWidth();
+		    int height = (int) Screen.getPrimary().getBounds().getHeight();
+			Scene scene = new Scene(root,width,height);
 			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
