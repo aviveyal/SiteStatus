@@ -13,7 +13,7 @@
 
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="711.0" prefWidth="926.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Package.Main">
    <center>
-      <PieChart fx:id="pieChart" prefHeight="684.0" prefWidth="833.0" visible="false" BorderPane.alignment="CENTER" />
+      <PieChart fx:id="pieChart" prefHeight="684.0" prefWidth="833.0" BorderPane.alignment="CENTER" />
    </center>
    <top>
    </top>

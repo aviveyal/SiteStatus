@@ -113,15 +113,13 @@ public class Main implements Initializable {
         Sites.add("737");
         Sites.add("715");
         Sites.add("714");
-        progress.setVisible(false);
+        //progress.setVisible(false);
         
         
 		
 	}
 	
 
-	
-	
 	
 	public void searchButton(){
 		
@@ -337,109 +335,109 @@ public class Main implements Initializable {
 	
 	
 	public void updateData() throws IOException{ //download data from jira
-//		System.out.println("downloading...");
-//		progress.setVisible(true);
-//		
-//		Thread th = new Thread(new Runnable(){
-//
-//			@Override
-//			public void run() {
-//				// TODO Auto-generated method stub
-//				progress.setProgress(0.0);
-//				double percent = 100/Sites.size();
-//				
-//				for (String site : Sites){
-//				if(site==Sites.get(Sites.size()-1)) // if last site, progress finished
-//				{
-//					updateProgrss(1.0);
-//				}
-//				
-//				
-//				updateProgrss(percent);
-//				String url = "https://jira.airobotics.co.il:8443/rest/api/2/issue/UCC-"+site+"?expand=changelog";
-//			     URL obj = null;
-//				try {
-//					obj = new URL(url);
-//				} catch (MalformedURLException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			     String encoding = Base64.getEncoder().encodeToString(("Commandcenter:123456789").getBytes());
-//			     HttpURLConnection con = null;
-//				try {
-//					con = (HttpURLConnection) obj.openConnection();
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			     // optional default is GET
-//			     try {
-//					con.setRequestMethod("GET");
-//				} catch (ProtocolException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			     con.setRequestProperty ("Authorization", "Basic " + encoding);
-//			     //add request header
-//			     con.setRequestProperty("User-Agent", "Mozilla/5.0");
-//			     int responseCode = 0;
-//				try {
-//					responseCode = con.getResponseCode();
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			     System.out.println("\nSending 'GET' request to URL : " + url);
-//			     System.out.println("Response Code : " + responseCode);
-//			     BufferedReader in = null;
-//				try {
-//					in = new BufferedReader(
-//					         new InputStreamReader(con.getInputStream()));
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			     String inputLine;
-//			     StringBuffer response = new StringBuffer();
-//			     try {
-//					while ((inputLine = in.readLine()) != null) {
-//					 	response.append(inputLine);
-//					 }
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			     try {
-//					in.close();
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			     //print in String
-//			     System.out.println(response.toString());
-//			     //Read JSON response and print
-//			     //JSONObject myResponse = new JSONObject(response.toString());
-//			     
-//			     try {      
-//			         FileOutputStream fos = new FileOutputStream("./tickets/"+site+".json");
-//			          fos.write(response.toString().getBytes());
-//			           fos.close();      
-//			         //Log.d(TAG, "Written to file");  
-//			       } 
-//			     catch (Exception e)
-//			       {    
-//			              
-//			           e.printStackTrace(); 
-//			        } 
-//			     
-//				} 
-//			}
-//				
-//				
-//			
-//			
-//		});
-//		th.start();
+		System.out.println("downloading...");
+		progress.setVisible(true);
+		
+		Thread th = new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				progress.setProgress(0.0);
+				double percent = 100/Sites.size();
+				
+				for (String site : Sites){
+				if(site==Sites.get(Sites.size()-1)) // if last site, progress finished
+				{
+					updateProgrss(1.0);
+				}
+				
+				
+				updateProgrss(percent);
+				String url = "https://jira.airobotics.co.il:8443/rest/api/2/issue/UCC-"+site+"?expand=changelog";
+			     URL obj = null;
+				try {
+					obj = new URL(url);
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			     String encoding = Base64.getEncoder().encodeToString(("Commandcenter:123456789").getBytes());
+			     HttpURLConnection con = null;
+				try {
+					con = (HttpURLConnection) obj.openConnection();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			     // optional default is GET
+			     try {
+					con.setRequestMethod("GET");
+				} catch (ProtocolException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			     con.setRequestProperty ("Authorization", "Basic " + encoding);
+			     //add request header
+			     con.setRequestProperty("User-Agent", "Mozilla/5.0");
+			     int responseCode = 0;
+				try {
+					responseCode = con.getResponseCode();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			     System.out.println("\nSending 'GET' request to URL : " + url);
+			     System.out.println("Response Code : " + responseCode);
+			     BufferedReader in = null;
+				try {
+					in = new BufferedReader(
+					         new InputStreamReader(con.getInputStream()));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			     String inputLine;
+			     StringBuffer response = new StringBuffer();
+			     try {
+					while ((inputLine = in.readLine()) != null) {
+					 	response.append(inputLine);
+					 }
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			     try {
+					in.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			     //print in String
+			     System.out.println(response.toString());
+			     //Read JSON response and print
+			     //JSONObject myResponse = new JSONObject(response.toString());
+			     
+			     try {      
+			         FileOutputStream fos = new FileOutputStream("./tickets/"+site+".json");
+			          fos.write(response.toString().getBytes());
+			           fos.close();      
+			         //Log.d(TAG, "Written to file");  
+			       } 
+			     catch (Exception e)
+			       {    
+			              
+			           e.printStackTrace(); 
+			        } 
+			     
+				} 
+			}
+				
+				
+			
+			
+		});
+		th.start();
 		
 		
 		
