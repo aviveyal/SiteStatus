@@ -263,11 +263,11 @@ public class Main implements Initializable {
 		// set mouse over functions
 		pieChart.getData().stream().forEach(data -> {
 		data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED, (event) -> {
-	        System.out.println("DSFSFGSFSGSGSDG" +data.getName());
+	        //System.out.println("DSFSFGSFSGSGSDG" +data.getName());
 	        data.getNode().setEffect(new Glow());
 	        
 	        data.getNode().addEventHandler(MouseEvent.MOUSE_EXITED, (e) -> {
-		        System.out.println("DSFSFGSFSGSGSDG" +data.getName());
+		       //System.out.println("DSFSFGSFSGSGSDG" +data.getName());
 		        data.getNode().setEffect(null);
 	        
 			//ddDrillDown();	    
