@@ -29,22 +29,28 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.geometry.Side;
 import javafx.scene.chart.*;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.util.Duration;
 
 public class Main implements Initializable {
 
@@ -252,37 +258,44 @@ public class Main implements Initializable {
 		pieChart.setData(pieChartData);
 		pieChart.setTitle("Site Activity");
 		pieChartData.forEach(data -> data.nameProperty()
-				.bind(Bindings.concat(data.getName(), " for ", data.pieValueProperty(), " Hours")));
+				.bind(Bindings.concat(data.getName(), " for ", data.pieValueProperty(), " Hours","(",round(((data.getPieValue() * 100) / total), 2) ,"%)")));
 
 		// set mouse over functions
 		pieChart.getData().stream().forEach(data -> {
-			data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED, (e) -> {
-
-				label.setMouseTransparent(true);
-				label.setText(round(((data.getPieValue() * 100) / total), 2) + "%");
-				label.setTranslateX(e.getSceneX());
-				label.setTranslateY(e.getSceneY() + 20);
-				label.setVisible(true);
-			});
-
-			data.getNode().addEventHandler(MouseEvent.MOUSE_EXITED, (x) -> {
-				label.setVisible(false);
-				
-			});
-
-			data.getNode().addEventHandler(MouseEvent.MOUSE_MOVED, (y) -> {
-				{
-					// Keep Label near the mouse
-					label.setTranslateX(y.getSceneX());
-					label.setTranslateY(y.getSceneY() + 20);
-				}
-			});
-
+		data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED, (event) -> {
+	        System.out.println("DSFSFGSFSGSGSDG" +data.getName());
+	        data.getNode().setEffect(new Glow());
+	        
+	        data.getNode().addEventHandler(MouseEvent.MOUSE_EXITED, (e) -> {
+		        System.out.println("DSFSFGSFSGSGSDG" +data.getName());
+		        data.getNode().setEffect(null);
+	        
+			//ddDrillDown();	    
+			        
+	    });
 		});
-
-		;
-
-		// borderPane.getChildren().add(pieChart);
+		});
+		
+					
+			
+	}
+	
+	public void DrillDown(){
+		
+		Double Active = round(map.get("Active"),2);
+		Double NotActive = round(map.get("Not Active"),2);
+		HashMap<String, Double> partialMap = new HashMap<String, Double>(map);
+	
+		
+    	pieChartData.clear();
+    	//pieChartData.add(new PieChart.Data("Active", round(map.get("Active"), 2)));
+    	//pieChartData.add(new PieChart.Data("Not Active", round(map.get("Not Active"), 2)));
+    	map.clear();
+       	map.put("Active", round(partialMap.get("Active"), 2));
+    	map.put("Not Active", round(partialMap.get("Not Active"), 2));
+    	
+    	loadPieChart();
+    
 	}
 
 	public static Double calculateDateDifferance(String Date1, String Date2 , boolean PickerDateFormmated) throws ParseException {
