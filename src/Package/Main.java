@@ -79,7 +79,7 @@ public class Main implements Initializable {
 	Double timing = 0.0;
 	Date checkDate;
 	ArrayList<String> Sites = new ArrayList<String>();
-
+	DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	HashMap<String, Double> map = new HashMap<String, Double>();
 	// ArrayList transactionList = new ArrayList<>();
 
@@ -182,32 +182,30 @@ public class Main implements Initializable {
 						JSONObject item = (JSONObject) items.get(j);
 						String field = (String) item.get("field");
 						if (field.equals("status")) {
-
+							
+							// change format to date from json
 							checkDate = new SimpleDateFormat("yyyy-MM-dd")
-									.parse(((String) history.get("created")).split("T", 2)[0]); // change
-																								// format
-																								// to
-																								// date
-																								// from
-																								// json
+									.parse(((String) history.get("created")).split("T", 2)[0]); 
+							// check dates range
 							if ((checkDate.after(PickerFrom) || checkDate.equals(PickerFrom))
-									&& (checkDate.before(PickerTo) || checkDate.equals(PickerTo))) // check
-																									// dates
-																									// range
+									&& (checkDate.before(PickerTo) || checkDate.equals(PickerTo))) 
 							{
+								from = (String) item.get("fromString");
+								
 								if (!flag) {
 									firstDate = (String) history.get("created");
 									flag = true;
+									map.put(from, calculateDateDifferance(firstDate, df.format(PickerFrom) ,true));
+									
 								} else {
 									secondDate = (String) history.get("created");
-									from = (String) item.get("fromString");
-
+									
 									// System.out.println(from);
 									if (map.containsKey(from)) {
 										timing = map.get(from);
-										map.put(from, timing + calculateDateDifferance(secondDate, firstDate));
+										map.put(from, timing + calculateDateDifferance(secondDate, firstDate,false));
 									} else {
-										map.put(from, calculateDateDifferance(secondDate, firstDate));
+										map.put(from, calculateDateDifferance(secondDate, firstDate,false));
 									}
 
 									flag = true;
@@ -242,11 +240,8 @@ public class Main implements Initializable {
 		System.out.println("Loading charts...");
 		total = 0.0;
 		for (String key : map.keySet()) {
-			pieChartData.add(new PieChart.Data(key, round(map.get(key), 2))); // add
-																				// data
-																				// to
-																				// pie
-																				// chart
+			// add data to pie chart
+			pieChartData.add(new PieChart.Data(key, round(map.get(key), 2))); 
 			total = total + round(map.get(key), 5);
 			System.out.println(key + " - " + map.get(key));
 
@@ -272,8 +267,7 @@ public class Main implements Initializable {
 
 			data.getNode().addEventHandler(MouseEvent.MOUSE_EXITED, (x) -> {
 				label.setVisible(false);
-				// Need to add a event when the mouse move hover the slice
-				// If I don't the popup stay blocked on edges of the slice.
+				
 			});
 
 			data.getNode().addEventHandler(MouseEvent.MOUSE_MOVED, (y) -> {
@@ -291,21 +285,26 @@ public class Main implements Initializable {
 		// borderPane.getChildren().add(pieChart);
 	}
 
-	public static Double calculateDateDifferance(String Date1, String Date2) throws ParseException {
+	public static Double calculateDateDifferance(String Date1, String Date2 , boolean PickerDateFormmated) throws ParseException {
 		Date date1 = new Date();
 		Date date2 = new Date();
-		String[] DateTime1 = Date1.split("T");
-		String[] DateTime2 = Date2.split("T");
-		String finalDate1 = "";
-		String finalDate2 = "";
 		Double result = 0.0;
-
-		DateTime1[1] = DateTime1[1].split("\\.", 2)[0];
+		
+		String finalDate2 = Date2;
+		if(!PickerDateFormmated)
+		{
+		
+		String[] DateTime2 = Date2.split("T");
 		DateTime2[1] = DateTime2[1].split("\\.", 2)[0];
-
-		finalDate1 = DateTime1[0] + " " + DateTime1[1];
 		finalDate2 = DateTime2[0] + " " + DateTime2[1];
+		}
+		
+		String finalDate1 = "";
+		String[] DateTime1 = Date1.split("T");
+		DateTime1[1] = DateTime1[1].split("\\.", 2)[0];
+		finalDate1 = DateTime1[0] + " " + DateTime1[1];
 		// System.out.println(Date1 + "," + Date2);
+		
 		date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(finalDate1);
 		date2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(finalDate2);
 		// SimpleDateFormat.parse(String);
@@ -314,18 +313,10 @@ public class Main implements Initializable {
 		Double dif = (double) (date1.getTime() - date2.getTime());
 		dif = dif / 1000;
 
-		long days = (long) (dif / (24 * 60 * 60));
-		Double hours = dif / (60 * 60) % 24;
-		Double minutes = dif / 60 % 60;
-		Double seconds = dif % 60;
-
-		// System.out.println(days + "," + hours + "," + minutes + "," +
-		// seconds);
+		Double days = dif / (24 * 60 * 60);
+	
 		result += (24 * days);
-		result += hours;
-		result += (minutes / 60);
-		result += (seconds / 360);
-		// System.out.println(result);
+
 
 		return result;
 
