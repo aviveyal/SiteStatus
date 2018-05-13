@@ -344,14 +344,7 @@ public class Main implements Initializable {
 				double percent = 100 / Sites.size();
 
 				for (String site : Sites) {
-					if (site == Sites.get(Sites.size() - 1)) // if last site,
-																// progress
-																// finished
-					{
-						updateProgrss(1.0);
-					}
-
-					updateProgrss(percent);
+					
 					String url = "https://jira.airobotics.co.il:8443/rest/api/2/issue/UCC-" + site
 							+ "?expand=changelog";
 					URL obj = null;
@@ -382,6 +375,16 @@ public class Main implements Initializable {
 					int responseCode = 0;
 					try {
 						responseCode = con.getResponseCode();
+						if(responseCode ==200)
+						{
+							if (site == Sites.get(Sites.size() - 1)) // if last site,
+								// progress finished
+							{
+								updateProgrss(1.0);
+							}
+
+							updateProgrss(percent);
+						}
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -412,7 +415,9 @@ public class Main implements Initializable {
 						e1.printStackTrace();
 					}
 					// print in String
+					
 					System.out.println(response.toString());
+					
 					// Read JSON response and print
 					// JSONObject myResponse = new
 					// JSONObject(response.toString());
