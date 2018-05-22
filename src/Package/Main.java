@@ -64,6 +64,10 @@ public class Main implements Initializable {
 
 	@FXML
 	PieChart pieChart;
+	
+	@FXML
+	PieChart pieChartOutSite;
+	
 	@FXML
 	BorderPane borderPane;
 	@FXML
@@ -80,10 +84,11 @@ public class Main implements Initializable {
 	ChoiceBox choiceBox;
 
 	ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+	//ObservableList<PieChart.Data> pieChartDataOutSite = FXCollections.observableArrayList();
+	
 	@FXML
 	Label caption = new Label("");
 
-	
 	
 	Stage stage;
 	boolean running;
@@ -307,13 +312,30 @@ public class Main implements Initializable {
 	}
 
 	public void loadPieChart() {
+		
 		System.out.println("Loading charts...");
 		total = 0.0;
+		String key2;
 		for (String key : map.keySet()) {
 			// add data to pie chart
-			pieChartData.add(new PieChart.Data(key, round(map.get(key), 2))); 
+			//System.out.print(key);
+			switch (key)
+			{
+			
+			case "Not Active":
+				key2 = "Out of client hours";
+				break;
+			case "Active":
+				key2 = "System available";
+				break;
+			default:
+				key2=key;
+				break;
+			}
+			
+			pieChartData.add(new PieChart.Data(key2, round(map.get(key), 2))); 
 			total = total + round(map.get(key), 5);
-			System.out.println(key + " - " + map.get(key));
+			System.out.println(key2 + " - " + map.get(key));
 
 		}
 
@@ -340,27 +362,27 @@ public class Main implements Initializable {
 		});
 		});
 		
-					
+		
 			
 	}
 	
-	public void DrillDown(){
-		
-		Double Active = round(map.get("Active"),2);
-		Double NotActive = round(map.get("Not Active"),2);
-		HashMap<String, Double> partialMap = new HashMap<String, Double>(map);
-	
-		
-    	pieChartData.clear();
-    	//pieChartData.add(new PieChart.Data("Active", round(map.get("Active"), 2)));
-    	//pieChartData.add(new PieChart.Data("Not Active", round(map.get("Not Active"), 2)));
-    	map.clear();
-       	map.put("Active", round(partialMap.get("Active"), 2));
-    	map.put("Not Active", round(partialMap.get("Not Active"), 2));
-    	
-    	loadPieChart();
-    
-	}
+//	public void DrillDown(){
+//		
+//		Double Active = round(map.get("Active"),2);
+//		Double NotActive = round(map.get("Not Active"),2);
+//		HashMap<String, Double> partialMap = new HashMap<String, Double>(map);
+//	
+//		
+//    	pieChartData.clear();
+//    	//pieChartData.add(new PieChart.Data("Active", round(map.get("Active"), 2)));
+//    	//pieChartData.add(new PieChart.Data("Not Active", round(map.get("Not Active"), 2)));
+//    	map.clear();
+//       	map.put("Active", round(partialMap.get("Active"), 2));
+//    	map.put("Not Active", round(partialMap.get("Not Active"), 2));
+//    	
+//    	loadPieChart();
+//    
+//	}
 
 	public static Double calculateDateDifferance(String Date1, String Date2 , boolean PickerDateFormmated) throws ParseException {
 		Date date1 = new Date();
