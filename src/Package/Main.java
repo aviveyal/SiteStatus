@@ -30,6 +30,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -43,6 +44,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Side;
 import javafx.scene.chart.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -50,6 +53,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Main implements Initializable {
@@ -75,6 +79,10 @@ public class Main implements Initializable {
 	@FXML
 	Label caption = new Label("");
 
+	
+	
+	Stage stage;
+	boolean running;
 	Double total = 0.0;
 	String from;
 	Double dateDifferance;
@@ -114,6 +122,11 @@ public class Main implements Initializable {
 		Sites.add("715");
 		Sites.add("714");
 		// progress.setVisible(false);
+
+		//init error message
+	
+		
+		
 
 	}
 
@@ -347,11 +360,11 @@ public class Main implements Initializable {
 	public void updateData() throws IOException { // download data from jira
 		System.out.println("downloading...");
 		progress.setVisible(true);
-
 		Thread th = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
+				
 				// TODO Auto-generated method stub
 				progress.setProgress(0.0);
 				double percent = 100 / Sites.size();
@@ -366,6 +379,9 @@ public class Main implements Initializable {
 					} catch (MalformedURLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						showError();
+						break;
+						
 					}
 					String encoding = Base64.getEncoder().encodeToString(("Commandcenter:123456789").getBytes());
 					HttpURLConnection con = null;
@@ -374,6 +390,9 @@ public class Main implements Initializable {
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						showError();
+						break;
+
 					}
 					// optional default is GET
 					try {
@@ -381,6 +400,9 @@ public class Main implements Initializable {
 					} catch (ProtocolException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						showError();
+						break;
+
 					}
 					con.setRequestProperty("Authorization", "Basic " + encoding);
 					// add request header
@@ -398,9 +420,22 @@ public class Main implements Initializable {
 
 							updateProgrss(percent);
 						}
+						else
+						{
+							// finish the progress due to error 
+							showError();
+							break;
+
+										
+							
+						}
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						// finish the progress due to error 
+						showError();
+						break;
+
 					}
 					System.out.println("\nSending 'GET' request to URL : " + url);
 					System.out.println("Response Code : " + responseCode);
@@ -410,6 +445,10 @@ public class Main implements Initializable {
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						// finish the progress due to error 
+						showError();
+						break;
+
 					}
 					String inputLine;
 					StringBuffer response = new StringBuffer();
@@ -420,12 +459,20 @@ public class Main implements Initializable {
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						// finish the progress due to error 
+						showError();
+						break;
+
 					}
 					try {
 						in.close();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						// finish the progress due to error 
+						showError();
+						break;
+
 					}
 					// print in String
 					
@@ -443,13 +490,36 @@ public class Main implements Initializable {
 					} catch (Exception e) {
 
 						e.printStackTrace();
+						// finish the progress due to error 
+						showError();
+						break;
+
 					}
 
 				}
+			
 			}
 
 		});
 		th.start();
 
+		
+	}
+	
+	public void showError(){
+		
+		Platform.runLater(new Runnable() {
+		    @Override
+		    public void run() {
+		    	Alert alert = new Alert(AlertType.ERROR);
+		    	alert.setTitle("Error");
+				alert.setHeaderText("Couldn't download new data");
+				alert.setContentText("Please try again");
+		    	stage= (Stage) alert.getDialogPane().getScene().getWindow();
+				stage.setAlwaysOnTop(true);
+				stage.toFront();
+		    	stage.show();
+		    }
+		});
 	}
 }
