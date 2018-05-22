@@ -16,7 +16,9 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -37,6 +39,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -55,6 +58,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 public class Main implements Initializable {
 
@@ -123,9 +127,56 @@ public class Main implements Initializable {
 		Sites.add("714");
 		// progress.setVisible(false);
 
-		//init error message
-	
-		
+		//init DatePickerFrom
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/y");
+        DatePickerFrom.setConverter(new StringConverter<LocalDate>() {
+
+            @Override
+            public String toString(LocalDate date) {
+                if (date == null) {
+                    return "" ;
+                }
+                return formatter.format(date);
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string == null || string.isEmpty()) {
+                    return null ;
+                }
+                return LocalDate.from(formatter.parse(string));
+            }
+
+        });
+
+        DatePickerFrom.valueProperty().addListener((obs, oldDate, newDate) -> 
+            System.out.println("Selected "+newDate));
+
+        
+      //init DatePickerTo
+        DatePickerTo.setConverter(new StringConverter<LocalDate>() {
+
+            @Override
+            public String toString(LocalDate date) {
+                if (date == null) {
+                    return "" ;
+                }
+                return formatter.format(date);
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string == null || string.isEmpty()) {
+                    return null ;
+                }
+                return LocalDate.from(formatter.parse(string));
+            }
+
+        });
+
+        DatePickerTo.valueProperty().addListener((obs, oldDate, newDate) -> 
+            System.out.println("Selected "+newDate));
+        
 		
 
 	}
@@ -511,6 +562,7 @@ public class Main implements Initializable {
 		Platform.runLater(new Runnable() {
 		    @Override
 		    public void run() {
+				//init error message
 		    	Alert alert = new Alert(AlertType.ERROR);
 		    	alert.setTitle("Error");
 				alert.setHeaderText("Couldn't download new data");
