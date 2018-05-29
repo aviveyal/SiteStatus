@@ -6,9 +6,12 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -74,7 +77,7 @@
       <PieChart fx:id="pieChart" prefHeight="644.0" prefWidth="818.0" BorderPane.alignment="CENTER" />
    </center>
    <left>
-      <VBox prefHeight="672.0" prefWidth="117.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="644.0" prefWidth="163.0" BorderPane.alignment="CENTER">
          <children>
             <Label contentDisplay="TOP" text="Site ">
                <font>
@@ -87,7 +90,8 @@
             <CheckBox fx:id="Haifa" mnemonicParsing="false" text="Haifa bay port">
                <VBox.margin>
                   <Insets top="5.0" />
-               </VBox.margin></CheckBox>
+               </VBox.margin>
+            </CheckBox>
             <CheckBox fx:id="Intel" mnemonicParsing="false" text="Intel - FAB 28">
                <VBox.margin>
                   <Insets top="5.0" />
@@ -130,16 +134,34 @@
             </CheckBox>
             <Button mnemonicParsing="false" onAction="#selectAll" text="Select all">
                <VBox.margin>
-                  <Insets left="28.0" top="15.0" />
-               </VBox.margin></Button>
+                  <Insets left="50.0" top="15.0" />
+               </VBox.margin>
+            </Button>
             <Button mnemonicParsing="false" onAction="#unSelectAll" text="Unselect all">
                <VBox.margin>
-                  <Insets left="22.0" top="10.0" />
-               </VBox.margin></Button>
+                  <Insets left="43.0" top="10.0" />
+               </VBox.margin>
+            </Button>
          </children>
          <BorderPane.margin>
             <Insets left="15.0" />
          </BorderPane.margin>
       </VBox>
    </left>
+   <bottom>
+      <AnchorPane prefHeight="164.0" prefWidth="926.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button layoutX="14.0" layoutY="38.0" mnemonicParsing="false" onAction="#clearList" text="Clear history" />
+            <StackPane layoutX="116.0" prefHeight="102.0" prefWidth="810.0" AnchorPane.bottomAnchor="62.0">
+               <children>
+                  <ListView fx:id="listView" prefHeight="67.0" prefWidth="840.0">
+                     <StackPane.margin>
+                        <Insets />
+                     </StackPane.margin>
+                  </ListView>
+               </children>
+            </StackPane>
+         </children>
+      </AnchorPane>
+   </bottom>
 </BorderPane>

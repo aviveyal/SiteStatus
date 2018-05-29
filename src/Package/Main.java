@@ -54,6 +54,7 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressIndicator;
@@ -63,6 +64,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+
 
 public class Main implements Initializable {
 
@@ -114,7 +116,12 @@ public class Main implements Initializable {
 	
 	@FXML
 	Label caption = new Label("");
-
+	
+//	@FXML
+//	ListView listView ;
+	
+	@FXML
+	ListView<String> listView = new ListView<String>(); 
 	
 	Stage stage;
 	boolean running;
@@ -129,6 +136,8 @@ public class Main implements Initializable {
 	Date checkDate;
 	int siteChecked=0;
 	ArrayList<String> Sites = new ArrayList<String>();
+	//ObservableList<String> data = new ObservableList<String>();
+	ArrayList<History> historyList = new ArrayList<History>();
 	DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	HashMap<String, Double> map = new HashMap<String, Double>();
 	// ArrayList transactionList = new ArrayList<>();
@@ -213,10 +222,27 @@ public class Main implements Initializable {
         
 		
 
+        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                String item =listView.getSelectionModel().getSelectedItem();
+                String []Sites = item.split(", ", 10);
+               // DatePickerFrom.setValue(new LocalDate(1, 5, 18));
+                unSelectAll();
+                for (String site : Sites){
+                	getCheckBox(site).setSelected(true);
+                }
+                searchButton();
+            }
+        });    
+        
+        
 	}
 
 	public void searchButton() {
-
+		
+		
 		ArrayList<String> SitesList = new ArrayList<String>();
 		resetVariables();
 
@@ -242,10 +268,112 @@ public class Main implements Initializable {
 		GraphGenerate(Date.from(DatePickerFrom.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
 				Date.from(DatePickerTo.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), SitesList);
 		siteChecked = SitesList.size(); 
+		
+		addToHistory(new History(DatePickerTo.getValue(),DatePickerFrom.getValue() ,SitesList));
 		loadPieChart();
 		
 	}
-
+	public void addToHistory(History history){
+		historyList.add(history);
+		String sb = "";
+		for(String site : history.siteList)
+		{
+			
+			sb+=getSiteName(site);
+			//if not last site- add comma
+			if(site!= history.siteList.get(history.siteList.size()-1))
+			{
+				sb+=", ";
+			}
+		}
+		if(sb !=""){
+			if(!listView.getItems().contains(sb)){
+//			sb+=" from ";
+//			sb+=history.DatePickerFrom;
+//			sb+=" to ";
+//			sb+=history.DatePickerTo;
+			listView.getItems().add(sb);
+		}
+		}
+	}
+	
+	public String getSiteName(String ticket){
+		
+		String siteName = null;
+		switch(ticket)
+		{
+				
+		case "705":
+			siteName="Haifa bay port";
+			break;
+		case "704":
+			siteName="Intel";
+			break;
+		case "706":
+			siteName="S32 Mine";
+			break;
+		case "708":
+			siteName="S32 Refinery";
+			break;
+		case "707":
+			siteName="BHP Area C";
+			break;
+		case "723":
+			siteName="BHP San Manuel";
+			break;
+		case "737":
+			siteName="Minera Centinela";
+			break;
+		case "715":
+			siteName="Vale NC1";
+			break;
+		case "714":
+			siteName="Vale NC2";
+			break;
+			
+		}
+		
+		return siteName;
+		
+		
+	}
+	
+public CheckBox getCheckBox(String SiteName){
+		
+		String checkBox = null;
+		switch(SiteName)
+		{
+				
+		case "Haifa bay port":
+			return Haifa;
+		case "Intel":
+			return Intel;
+		case "S32 Mine":
+			return S32Mine;
+		case "S32 Refinery":
+			return S32Ref;
+		case "BHP Area C":
+			return AreaC;
+		case "BHP San Manuel":
+			return SanManuel;
+		case "Minera Centinela":
+			return Minera;
+		case "Vale NC1":
+			return ValeNc1;
+		case "Vale NC2":
+			return ValeNc2;
+			
+		}
+		return null;
+		
+		
+		
+	}
+	
+	
+	
+	
+	
 	public void resetVariables() {
 		pieChart.getData().clear();
 		pieChartData.clear();
@@ -392,23 +520,7 @@ public class Main implements Initializable {
 			
 	}
 	
-//	public void DrillDown(){
-//		
-//		Double Active = round(map.get("Active"),2);
-//		Double NotActive = round(map.get("Not Active"),2);
-//		HashMap<String, Double> partialMap = new HashMap<String, Double>(map);
-//	
-//		
-//    	pieChartData.clear();
-//    	//pieChartData.add(new PieChart.Data("Active", round(map.get("Active"), 2)));
-//    	//pieChartData.add(new PieChart.Data("Not Active", round(map.get("Not Active"), 2)));
-//    	map.clear();
-//       	map.put("Active", round(partialMap.get("Active"), 2));
-//    	map.put("Not Active", round(partialMap.get("Not Active"), 2));
-//    	
-//    	loadPieChart();
-//    
-//	}
+
 	public void selectAll(){
 		Haifa.setSelected(true);
 		Intel.setSelected(true);
@@ -431,6 +543,9 @@ public class Main implements Initializable {
 		Minera.setSelected(false);
 		ValeNc1.setSelected(false);
 		ValeNc2.setSelected(false);
+	}
+	public void clearList(){
+		listView.getItems().clear();
 	}
 	
 	
@@ -494,8 +609,8 @@ public class Main implements Initializable {
 
 				for (String site : Sites) {
 					
-					String url = "https://jira.airobotics.co.il:8443/rest/api/2/issue/UCC-" + site
-							+ "?expand=changelog";
+					String url = "https://jira.airobotics.co.il:8443/rest/api/2/issue/UCC-" + site + "?expand=changelog";
+					
 					URL obj = null;
 					try {
 						obj = new URL(url);
@@ -548,8 +663,7 @@ public class Main implements Initializable {
 							// finish the progress due to error 
 							showError();
 							break;
-
-										
+			
 							
 						}
 					} catch (IOException e1) {
