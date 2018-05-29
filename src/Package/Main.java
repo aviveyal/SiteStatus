@@ -49,9 +49,13 @@ import javafx.geometry.Side;
 import javafx.scene.chart.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
@@ -82,7 +86,29 @@ public class Main implements Initializable {
 	DatePicker DatePickerTo;
 	@FXML
 	ChoiceBox choiceBox;
-
+	
+//	@FXML
+//	MenuButton menuButton;
+	
+	@FXML
+	CheckBox Haifa = new CheckBox("Haifa bay port");
+	@FXML
+	CheckBox Intel = new CheckBox("Intel - FAB 28");
+	@FXML
+	CheckBox S32Mine = new CheckBox("S32 Mine");
+	@FXML
+	CheckBox S32Ref = new CheckBox("S32 Refinery");
+	@FXML
+	CheckBox AreaC = new CheckBox("BHP Area C");
+	@FXML
+	CheckBox SanManuel = new CheckBox("BHP San Manuel");
+	@FXML
+	CheckBox Minera = new CheckBox("Minera Centinela");
+	@FXML
+	CheckBox ValeNc1 = new CheckBox("Vale NC1");
+	@FXML
+	CheckBox ValeNc2 = new CheckBox("Vale NC2");
+	
 	ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 	//ObservableList<PieChart.Data> pieChartDataOutSite = FXCollections.observableArrayList();
 	
@@ -101,6 +127,7 @@ public class Main implements Initializable {
 	boolean flag = false;
 	Double timing = 0.0;
 	Date checkDate;
+	int siteChecked=0;
 	ArrayList<String> Sites = new ArrayList<String>();
 	DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	HashMap<String, Double> map = new HashMap<String, Double>();
@@ -111,16 +138,18 @@ public class Main implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		choiceBox.getItems().add("Haifa bay port");
-		choiceBox.getItems().add("Intel - FAB 28");
-		choiceBox.getItems().add("S32 Mine");
-		choiceBox.getItems().add("S32 Refinery");
-		choiceBox.getItems().add("BHP Area C");
-		choiceBox.getItems().add("BHP San Manuel");
-		choiceBox.getItems().add("Minera Centinela");
-		choiceBox.getItems().add("Vale NC1");
-		choiceBox.getItems().add("Vale NC2");
-
+		
+//		choiceBox.getItems().add("Haifa bay port");
+//		choiceBox.getItems().add("Intel - FAB 28");
+//		choiceBox.getItems().add("S32 Mine");
+//		choiceBox.getItems().add("S32 Refinery");
+//		choiceBox.getItems().add("BHP Area C");
+//		choiceBox.getItems().add("BHP San Manuel");
+//		choiceBox.getItems().add("Minera Centinela");
+//		choiceBox.getItems().add("Vale NC1");
+//		choiceBox.getItems().add("Vale NC2");
+//		
+				
 		Sites.add("705");
 		Sites.add("704");
 		Sites.add("706");
@@ -188,44 +217,33 @@ public class Main implements Initializable {
 
 	public void searchButton() {
 
-		String Site = "";
+		ArrayList<String> SitesList = new ArrayList<String>();
 		resetVariables();
-		switch (choiceBox.getSelectionModel().getSelectedItem().toString()) {
-		case "Haifa bay port":
-			Site = "705";
-			break;
-		case "Intel - FAB 28":
-			Site = "704";
-			break;
-		case "S32 Mine":
-			Site = "706";
-			break;
-		case "S32 Refinery":
-			Site = "708";
-			break;
-		case "BHP Area C":
-			Site = "707";
-			break;
-		case "BHP San Manuel":
-			Site = "723";
-			break;
-		case "Minera Centinela":
-			Site = "737";
-			break;
-		case "Vale NC1":
-			Site = "715";
-			break;
-		case "Vale NC2":
-			Site = "714";
-			break;
 
-		}
-
+		if(Haifa.isSelected())
+			SitesList.add("705");
+		if(Intel.isSelected())
+			SitesList.add("704");
+		if(S32Mine.isSelected())
+			SitesList.add("706");
+		if(S32Ref.isSelected())
+			SitesList.add("708");
+		if(AreaC.isSelected())
+			SitesList.add("707");
+		if(SanManuel.isSelected())
+			SitesList.add("723");
+		if(Minera.isSelected())
+			SitesList.add("737");
+		if(ValeNc1.isSelected())
+			SitesList.add("715");
+		if(ValeNc2.isSelected())
+			SitesList.add("714");
 		// System.out.println(DatePickerFrom.getValue());
 		GraphGenerate(Date.from(DatePickerFrom.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-				Date.from(DatePickerTo.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), Site);
-
+				Date.from(DatePickerTo.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), SitesList);
+		siteChecked = SitesList.size(); 
 		loadPieChart();
+		
 	}
 
 	public void resetVariables() {
@@ -237,13 +255,18 @@ public class Main implements Initializable {
 		firstDate = "";
 		secondDate = "";
 		flag = false;
+		siteChecked =0;
 	}
 
-	public void GraphGenerate(Date PickerFrom, Date PickerTo, String site) {
-		System.out.println(site);
+	public void GraphGenerate(Date PickerFrom, Date PickerTo, ArrayList<String> SitesList) {
+		//System.out.println(site);
+		for(int x=0 ; x< SitesList.size(); x++)
+		{
+		System.out.println(SitesList.get(x));
+		flag= false;
 		timing = 0.0;
 		try {
-			Object obj = parser.parse(new FileReader("./tickets/" + site + ".json"));
+			Object obj = parser.parse(new FileReader("./tickets/" + SitesList.get(x) + ".json"));
 			JSONObject jsonObject = (JSONObject) obj;
 			JSONObject changelog = (JSONObject) jsonObject.get("changelog");
 			JSONArray histories = (JSONArray) changelog.get("histories");
@@ -267,7 +290,7 @@ public class Main implements Initializable {
 							{
 								from = (String) item.get("fromString");
 								
-								if (!flag) {
+								if (!flag) { // for the first date
 									firstDate = (String) history.get("created");
 									flag = true;
 									map.put(from, calculateDateDifferance(firstDate, df.format(PickerFrom) ,true));
@@ -298,6 +321,8 @@ public class Main implements Initializable {
 			fe.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		System.out.println(SitesList.get(x)+"-"+ map.get("Not Active-Site Failure"));
 		}
 
 	}
@@ -333,16 +358,17 @@ public class Main implements Initializable {
 				break;
 			}
 			
-			pieChartData.add(new PieChart.Data(key2, round(map.get(key), 2))); 
-			total = total + round(map.get(key), 5);
-			System.out.println(key2 + " - " + map.get(key));
+			pieChartData.add(new PieChart.Data(key2, round(map.get(key)/siteChecked, 2)  )); 
+			total = round(total,5)+ (round(map.get(key)/siteChecked, 5));
+			System.out.println(key2 + " - " + map.get(key)/siteChecked);
+			System.out.println(total);
 
 		}
 
 		// set pieChart data and settings
-		pieChart.setLegendSide(Side.LEFT);
+		pieChart.setLegendSide(Side.TOP);
 		pieChart.setData(pieChartData);
-		pieChart.setTitle("Site Activity");
+		//pieChart.setTitle("Site Activity");
 		pieChartData.forEach(data -> data.nameProperty()
 				.bind(Bindings.concat(data.getName(), " for ", data.pieValueProperty(), " Hours","(",round(((data.getPieValue() * 100) / total), 2) ,"%)")));
 
@@ -383,7 +409,31 @@ public class Main implements Initializable {
 //    	loadPieChart();
 //    
 //	}
-
+	public void selectAll(){
+		Haifa.setSelected(true);
+		Intel.setSelected(true);
+		S32Mine.setSelected(true);
+		S32Ref.setSelected(true);
+		AreaC.setSelected(true);
+		SanManuel.setSelected(true);
+		Minera.setSelected(true);
+		ValeNc1.setSelected(true);
+		ValeNc2.setSelected(true);
+		
+	}
+	public void unSelectAll(){
+		Haifa.setSelected(false);
+		Intel.setSelected(false);
+		S32Mine.setSelected(false);
+		S32Ref.setSelected(false);
+		AreaC.setSelected(false);
+		SanManuel.setSelected(false);
+		Minera.setSelected(false);
+		ValeNc1.setSelected(false);
+		ValeNc2.setSelected(false);
+	}
+	
+	
 	public static Double calculateDateDifferance(String Date1, String Date2 , boolean PickerDateFormmated) throws ParseException {
 		Date date1 = new Date();
 		Date date2 = new Date();

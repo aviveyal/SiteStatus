@@ -3,38 +3,26 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="711.0" prefWidth="926.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Package.Main">
    <top>
    </top>
    <top>
-      <HBox prefHeight="67.0" prefWidth="782.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="67.0" prefWidth="910.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="label" mouseTransparent="true" pickOnBounds="false" prefHeight="30.0" prefWidth="57.0" text="Label" visible="false">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label text="Site :">
-               <HBox.margin>
-                  <Insets right="5.0" top="15.0" />
-               </HBox.margin>
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <ChoiceBox fx:id="choiceBox" prefWidth="150.0">
-               <HBox.margin>
-                  <Insets right="10.0" top="15.0" />
-               </HBox.margin>
-            </ChoiceBox>
             <Label text="From : ">
                <HBox.margin>
                   <Insets right="5.0" top="15.0" />
@@ -83,6 +71,75 @@
       </HBox>
    </top>
    <center>
-      <PieChart fx:id="pieChart" prefHeight="684.0" prefWidth="833.0" BorderPane.alignment="CENTER" />
+      <PieChart fx:id="pieChart" prefHeight="644.0" prefWidth="818.0" BorderPane.alignment="CENTER" />
    </center>
+   <left>
+      <VBox prefHeight="672.0" prefWidth="117.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label contentDisplay="TOP" text="Site ">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="50.0" />
+               </VBox.margin>
+            </Label>
+            <CheckBox fx:id="Haifa" mnemonicParsing="false" text="Haifa bay port">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin></CheckBox>
+            <CheckBox fx:id="Intel" mnemonicParsing="false" text="Intel - FAB 28">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="S32Mine" mnemonicParsing="false" text="S32 Mine">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="S32Ref" mnemonicParsing="false" text="S32 Refinery">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="AreaC" mnemonicParsing="false" text="BHP Area C">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="SanManuel" mnemonicParsing="false" text="BHP San Manuel">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="Minera" mnemonicParsing="false" text="Minera Centinela">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="ValeNc1" mnemonicParsing="false" text="Vale NC1">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="ValeNc2" mnemonicParsing="false" text="Vale NC2">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <Button mnemonicParsing="false" onAction="#selectAll" text="Select all">
+               <VBox.margin>
+                  <Insets left="28.0" top="15.0" />
+               </VBox.margin></Button>
+            <Button mnemonicParsing="false" onAction="#unSelectAll" text="Unselect all">
+               <VBox.margin>
+                  <Insets left="22.0" top="10.0" />
+               </VBox.margin></Button>
+         </children>
+         <BorderPane.margin>
+            <Insets left="15.0" />
+         </BorderPane.margin>
+      </VBox>
+   </left>
 </BorderPane>
