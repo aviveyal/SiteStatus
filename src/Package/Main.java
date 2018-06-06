@@ -417,6 +417,18 @@ public CheckBox getCheckBox(String SiteName){
 									&& (checkDate.before(PickerTo) || checkDate.equals(PickerTo))) 
 							{
 								from = (String) item.get("fromString");
+								switch (from)
+								{
+								
+								case "Not Active":
+									from = "Out of client hours";
+									break;
+								case "Active":
+									from = "System available";
+									break;
+								default:
+									break;
+								}
 								
 								if (!flag) { // for the first date
 									firstDate = (String) history.get("created");
@@ -437,8 +449,7 @@ public CheckBox getCheckBox(String SiteName){
 									flag = true;
 									firstDate = secondDate;
 								}
-								from = (String) item.get("fromString");
-								to = (String) item.get("toString");
+
 							}
 						}
 					}
@@ -450,7 +461,7 @@ public CheckBox getCheckBox(String SiteName){
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(SitesList.get(x)+"-"+ map.get("Not Active-Site Failure"));
+		//System.out.println(SitesList.get(x)+"-"+ map.get("Not Active-Site Failure"));
 		}
 
 	}
@@ -472,23 +483,23 @@ public CheckBox getCheckBox(String SiteName){
 		for (String key : map.keySet()) {
 			// add data to pie chart
 			//System.out.print(key);
-			switch (key)
-			{
+//			switch (key)
+//			{
+//			
+//			case "Not Active":
+//				key2 = "Out of client hours";
+//				break;
+//			case "Active":
+//				key2 = "System available";
+//				break;
+//			default:
+//				key2=key;
+//				break;
+//			}
 			
-			case "Not Active":
-				key2 = "Out of client hours";
-				break;
-			case "Active":
-				key2 = "System available";
-				break;
-			default:
-				key2=key;
-				break;
-			}
-			
-			pieChartData.add(new PieChart.Data(key2, round(map.get(key)/siteChecked, 2)  )); 
+			pieChartData.add(new PieChart.Data(key, round(map.get(key)/siteChecked, 2)  )); 
 			total = round(total,5)+ (round(map.get(key)/siteChecked, 5));
-			System.out.println(key2 + " - " + map.get(key)/siteChecked);
+			System.out.println(key + " - " + map.get(key)/siteChecked);
 			System.out.println(total);
 
 		}
